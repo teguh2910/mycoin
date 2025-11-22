@@ -1,0 +1,120 @@
+name: Build MyCoin
+
+on:
+  push:
+    branches: [ master, main ]
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Setup CMake
+      uses: lukka/get-cmake@latest
+      
+    - name: Configure CMake
+      run: cmake -B build -G "Visual Studio 17 2022" -A x64
+      
+    - name: Build
+      run: cmake --build build --config Release --parallel 4
+      
+    - name: List build outputs
+      run: dir build\src\Release
+      
+    - name: Upload Windows binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: mycoin-windows-x64
+        path: |
+          build/src/Release/mycoind.exe
+          build/src/Release/mycoin-cli.exe
+          build/src/Release/mycoin-tx.exe
+          build/src/Release/mycoin-wallet.exe
+        retention-days: 30
+        
+  build-linux:
+    name: Build Linux
+    runs-on: ubuntu-22.04
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          build-essential \
+          cmake \
+          libboost-system-dev \
+          libboost-filesystem-dev \
+          libboost-thread-dev \
+          libssl-dev \
+          libevent-dev \
+          libdb++-dev \
+          libminiupnpc-dev \
+          libzmq3-dev
+          
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+      
+    - name: Build
+      run: cmake --build build --parallel $(nproc)
+      
+    - name: List build outputs
+      run: ls -lh build/src/
+      
+    - name: Upload Linux binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: mycoin-linux-x64
+        path: |
+          build/src/mycoind
+          build/src/mycoin-cli
+          build/src/mycoin-tx
+          build/src/mycoin-wallet
+        retention-days: 30
+        
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    - name: Install dependencies
+      run: |
+        brew update
+        brew install cmake boost openssl libevent miniupnpc zeromq berkeley-db@5
+        
+    - name: Configure CMake
+      run: |
+        cmake -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DOPENSSL_ROOT_DIR=$(brew --prefix openssl) \
+          -DBDB_ROOT_DIR=$(brew --prefix berkeley-db@5)
+      
+    - name: Build
+      run: cmake --build build --parallel $(sysctl -n hw.ncpu)
+      
+    - name: List build outputs
+      run: ls -lh build/src/
+      
+    - name: Upload macOS binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: mycoin-macos-x64
+        path: |
+          build/src/mycoind
+          build/src/mycoin-cli
+          build/src/mycoin-tx
+          build/src/mycoin-wallet
+        retention-days: 30
