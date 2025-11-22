@@ -169,7 +169,7 @@ if(ENABLE_WALLET)
       bitcoin_util
       Boost::headers
     )
-    install_binary_component(bitcoin-wallet HAS_MANPAGE)
+    install_binary_component(mycoin-wallet HAS_MANPAGE)
   endif()
 endif()
 
@@ -408,16 +408,16 @@ if(BUILD_KERNEL_LIB)
     add_subdirectory(test/kernel)
   endif()
   if(BUILD_UTIL_CHAINSTATE)
-    add_executable(bitcoin-chainstate
+    add_executable(mycoin-chainstate
       bitcoin-chainstate.cpp
     )
-    add_windows_application_manifest(bitcoin-chainstate)
-    target_link_libraries(bitcoin-chainstate
+    add_windows_application_manifest(mycoin-chainstate)
+    target_link_libraries(mycoin-chainstate
       PRIVATE
         core_interface
         bitcoinkernel
     )
-    install_binary_component(bitcoin-chainstate INTERNAL)
+    install_binary_component(mycoin-chainstate INTERNAL)
   endif()
 endif()
 
