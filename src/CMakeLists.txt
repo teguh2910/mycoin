@@ -155,14 +155,14 @@ if(ENABLE_WALLET)
   add_subdirectory(wallet)
 
   if(BUILD_WALLET_TOOL)
-    add_executable(bitcoin-wallet
+    add_executable(mycoin-wallet
       bitcoin-wallet.cpp
       init/bitcoin-wallet.cpp
       wallet/wallettool.cpp
     )
-    add_windows_resources(bitcoin-wallet bitcoin-wallet-res.rc)
-    add_windows_application_manifest(bitcoin-wallet)
-    target_link_libraries(bitcoin-wallet
+    add_windows_resources(mycoin-wallet bitcoin-wallet-res.rc)
+    add_windows_application_manifest(mycoin-wallet)
+    target_link_libraries(mycoin-wallet
       core_interface
       bitcoin_wallet
       bitcoin_common
@@ -287,42 +287,42 @@ target_link_libraries(bitcoin_node
     $<TARGET_NAME_IF_EXISTS:USDT::headers>
 )
 
-# Bitcoin wrapper executable that can call other executables.
+# MyCoin wrapper executable that can call other executables.
 if(BUILD_BITCOIN_BIN)
-  add_executable(bitcoin bitcoin.cpp)
-  add_windows_resources(bitcoin bitcoin-res.rc)
-  add_windows_application_manifest(bitcoin)
-  target_link_libraries(bitcoin core_interface bitcoin_common bitcoin_util)
-  install_binary_component(bitcoin HAS_MANPAGE)
+  add_executable(mycoin bitcoin.cpp)
+  add_windows_resources(mycoin bitcoin-res.rc)
+  add_windows_application_manifest(mycoin)
+  target_link_libraries(mycoin core_interface bitcoin_common bitcoin_util)
+  install_binary_component(mycoin HAS_MANPAGE)
 endif()
 
-# Bitcoin Core bitcoind.
+# MyCoin Core mycoind.
 if(BUILD_DAEMON)
-  add_executable(bitcoind
+  add_executable(mycoind
     bitcoind.cpp
     init/bitcoind.cpp
   )
-  add_windows_resources(bitcoind bitcoind-res.rc)
-  add_windows_application_manifest(bitcoind)
-  target_link_libraries(bitcoind
+  add_windows_resources(mycoind bitcoind-res.rc)
+  add_windows_application_manifest(mycoind)
+  target_link_libraries(mycoind
     core_interface
     bitcoin_node
     $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
-  install_binary_component(bitcoind HAS_MANPAGE)
+  install_binary_component(mycoind HAS_MANPAGE)
 endif()
 if(ENABLE_IPC AND BUILD_DAEMON)
-  add_executable(bitcoin-node
+  add_executable(mycoin-node
     bitcoind.cpp
     init/bitcoin-node.cpp
   )
-  target_link_libraries(bitcoin-node
+  target_link_libraries(mycoin-node
     core_interface
     bitcoin_node
     bitcoin_ipc
     $<TARGET_NAME_IF_EXISTS:bitcoin_wallet>
   )
-  install_binary_component(bitcoin-node INTERNAL)
+  install_binary_component(mycoin-node INTERNAL)
 endif()
 
 if(ENABLE_IPC AND BUILD_TESTS)
@@ -353,12 +353,12 @@ target_link_libraries(bitcoin_cli
 )
 
 
-# Bitcoin Core RPC client
+# MyCoin Core RPC client
 if(BUILD_CLI)
-  add_executable(bitcoin-cli bitcoin-cli.cpp)
-  add_windows_resources(bitcoin-cli bitcoin-cli-res.rc)
-  add_windows_application_manifest(bitcoin-cli)
-  target_link_libraries(bitcoin-cli
+  add_executable(mycoin-cli bitcoin-cli.cpp)
+  add_windows_resources(mycoin-cli bitcoin-cli-res.rc)
+  add_windows_application_manifest(mycoin-cli)
+  target_link_libraries(mycoin-cli
     core_interface
     bitcoin_cli
     bitcoin_common
@@ -366,34 +366,34 @@ if(BUILD_CLI)
     libevent::core
     libevent::extra
   )
-  install_binary_component(bitcoin-cli HAS_MANPAGE)
+  install_binary_component(mycoin-cli HAS_MANPAGE)
 endif()
 
 
 if(BUILD_TX)
-  add_executable(bitcoin-tx bitcoin-tx.cpp)
-  add_windows_resources(bitcoin-tx bitcoin-tx-res.rc)
-  add_windows_application_manifest(bitcoin-tx)
-  target_link_libraries(bitcoin-tx
+  add_executable(mycoin-tx bitcoin-tx.cpp)
+  add_windows_resources(mycoin-tx bitcoin-tx-res.rc)
+  add_windows_application_manifest(mycoin-tx)
+  target_link_libraries(mycoin-tx
     core_interface
     bitcoin_common
     bitcoin_util
     univalue
   )
-  install_binary_component(bitcoin-tx HAS_MANPAGE)
+  install_binary_component(mycoin-tx HAS_MANPAGE)
 endif()
 
 
 if(BUILD_UTIL)
-  add_executable(bitcoin-util bitcoin-util.cpp)
-  add_windows_resources(bitcoin-util bitcoin-util-res.rc)
-  add_windows_application_manifest(bitcoin-util)
-  target_link_libraries(bitcoin-util
+  add_executable(mycoin-util bitcoin-util.cpp)
+  add_windows_resources(mycoin-util bitcoin-util-res.rc)
+  add_windows_application_manifest(mycoin-util)
+  target_link_libraries(mycoin-util
     core_interface
     bitcoin_common
     bitcoin_util
   )
-  install_binary_component(bitcoin-util HAS_MANPAGE)
+  install_binary_component(mycoin-util HAS_MANPAGE)
 endif()
 
 
