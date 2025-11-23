@@ -133,9 +133,9 @@ public:
         m_assumed_chain_state_size = 1;
 
         // Genesis block with regtest-level difficulty for easy CPU mining
-        genesis = CreateGenesisBlock(1231006505, 0, 0x207fffff, 1, 50 * COIN);
+        genesis = CreateGenesisBlock(1231006505, 1, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"78a007539d547f74482668fa8adf31be6c437796a0d68dbfe4e5169afee99310"});
+        assert(consensus.hashGenesisBlock == uint256{"6efc6097e26800e29b59dc214f0ae19e8314ce63eabaf00b13c5582064ecb755"});
         assert(genesis.hashMerkleRoot == uint256{"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"});
 
         // Note that of those which support the service bits prefix, most only support a subset of
