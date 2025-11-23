@@ -117,7 +117,7 @@ echo ""
 
 # 6. Verify genesis block
 echo -e "${YELLOW}[6/7] Verifying genesis block...${NC}"
-EXPECTED_HASH="6efc6097e26800e29b59dc214f0ae19e8314ce63eabaf00b13c5582064ecb755"
+EXPECTED_HASH="0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"
 ACTUAL_HASH=$($BUILD_DIR/mycoin-cli $NETWORK getblockhash 0 2>/dev/null || echo "ERROR")
 
 if [ "$ACTUAL_HASH" = "$EXPECTED_HASH" ]; then
