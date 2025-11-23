@@ -133,7 +133,8 @@ public:
         m_assumed_chain_state_size = 1;
 
         // Genesis block with regtest-level difficulty for easy CPU mining
-        genesis = CreateGenesisBlock(1231006505, 2, 0x207fffff, 1, 50 * COIN);
+        // Using same genesis as Bitcoin regtest for compatibility
+        genesis = CreateGenesisBlock(1296688602, 2, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
         assert(consensus.hashGenesisBlock == uint256{"0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"});
         assert(genesis.hashMerkleRoot == uint256{"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"});
