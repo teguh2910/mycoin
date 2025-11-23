@@ -146,6 +146,28 @@ def main():
         
         if result['success']:
             blocks_found = result['count']
+            
+            # Verify blocks were actually mined
+            if blocks_found == 0:
+                print()
+                print("⚠️  No blocks generated (mining might be stuck)")
+                print("   This can happen if difficulty is too high")
+                print("   Checking actual blockchain state...")
+                
+                current_blocks = run_rpc("getblockcount") or 0
+                mining_info = run_rpc("getmininginfo")
+                
+                print(f"   Blockchain Height: {current_blocks}")
+                if mining_info:
+                    print(f"   Current Difficulty: {mining_info.get('difficulty', 'unknown')}")
+                    print(f"   Network Hash Rate: {mining_info.get('networkhashps', 0)} H/s")
+                
+                print("\n   💡 Tip: If difficulty is 1, mining takes 10-30 minutes per block")
+                print("   Consider using sequential miner: python3 ../contrib/mine_sequential.py")
+                print()
+                time.sleep(5)
+                continue
+            
             total_blocks_mined += blocks_found
             
             # Get updated stats
@@ -157,7 +179,8 @@ def main():
             print("=" * 80)
             print(f"✅ {blocks_found} BLOCKS MINED!")
             print("=" * 80)
-            print(f"⏱️  Time: {result['elapsed']:.2f}s ({result['elapsed']/blocks_found:.2f}s per block)")
+            avg_per_block = result['elapsed'] / blocks_found if blocks_found > 0 else 0
+            print(f"⏱️  Time: {result['elapsed']:.2f}s ({avg_per_block:.2f}s per block)")
             print(f"📊 Blockchain Height: {current_blocks}")
             print(f"💰 Balance: {current_balance:.8f} MYC")
             print(f"📈 Session Stats:")

@@ -32,10 +32,21 @@ def run_rpc(command):
             [MYCOIN_CLI] + command.split(),
             capture_output=True,
             text=True,
-            check=True
+            check=True,
+            timeout=30
         )
-        return json.loads(result.stdout) if result.stdout.strip() else None
-    except:
+        if result.stdout.strip():
+            try:
+                return json.loads(result.stdout)
+            except json.JSONDecodeError:
+                return result.stdout.strip()
+        return None
+    except subprocess.CalledProcessError as e:
+        # Wallet might not be loaded, try to handle it
+        if "Wallet not found" in str(e.stderr) or "Requested wallet does not exist" in str(e.stderr):
+            return "WALLET_ERROR"
+        return None
+    except Exception:
         return None
 
 def mine_one_block(address):
@@ -110,11 +121,33 @@ def main():
     print("=" * 80)
     print()
     
+    # Check daemon
+    print("🔌 Connecting to daemon...")
+    for i in range(10):
+        blockcount = run_rpc("getblockcount")
+        if blockcount is not None and blockcount != "WALLET_ERROR":
+            print("✅ Daemon connected!")
+            break
+        print(f"   Waiting... ({i+1}/10)")
+        time.sleep(2)
+    else:
+        print("❌ Cannot connect to daemon!")
+        print("   Start with: ./bin/mycoind -daemon")
+        sys.exit(1)
+    
+    # Ensure wallet exists
+    print("📝 Checking wallet...")
+    wallets = run_rpc("listwallets")
+    if not wallets or "mywallet" not in (wallets if isinstance(wallets, list) else []):
+        print("   Creating wallet 'mywallet'...")
+        run_rpc("createwallet mywallet")
+        time.sleep(2)
+    
     # Get address
     address = run_rpc("getnewaddress")
-    if not address:
-        print("❌ Failed to get address. Is daemon running?")
-        print("   Run: ./bin/mycoind -daemon")
+    if not address or address == "WALLET_ERROR":
+        print("❌ Failed to get address!")
+        print("   Try manually: ./bin/mycoin-cli createwallet mywallet")
         sys.exit(1)
     
     print(f"🔑 Mining Address: {address}")
