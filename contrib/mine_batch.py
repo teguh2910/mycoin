@@ -31,10 +31,20 @@ def run_rpc(command):
             [MYCOIN_CLI] + command.split(),
             capture_output=True,
             text=True,
-            check=True
+            check=True,
+            timeout=30
         )
-        return json.loads(result.stdout) if result.stdout.strip() else None
-    except:
+        if result.stdout.strip():
+            try:
+                return json.loads(result.stdout)
+            except json.JSONDecodeError:
+                return result.stdout.strip()
+        return None
+    except subprocess.CalledProcessError as e:
+        print(f"RPC Error: {e.stderr}")
+        return None
+    except Exception as e:
+        print(f"Error: {e}")
         return None
 
 def mine_block_batch(address, count):
@@ -87,9 +97,28 @@ def main():
     print()
     
     # Get address
+    print("🔌 Connecting to daemon...")
+    
+    # Wait for daemon to be ready
+    for i in range(10):
+        blockcount = run_rpc("getblockcount")
+        if blockcount is not None:
+            print("✅ Connected!")
+            break
+        print(f"   Waiting for daemon... ({i+1}/10)")
+        time.sleep(2)
+    else:
+        print("❌ Could not connect to daemon after 20 seconds")
+        print("   Troubleshooting:")
+        print("   1. Check if daemon is running: ps aux | grep mycoind")
+        print("   2. Check RPC manually: ./bin/mycoin-cli getblockcount")
+        print("   3. Check debug.log: tail -50 ~/.mycoin/debug.log")
+        sys.exit(1)
+    
     address = run_rpc("getnewaddress")
     if not address:
-        print("❌ Daemon not running! Start with: ./bin/mycoind -daemon")
+        print("❌ Failed to get address!")
+        print("   Try: ./bin/mycoin-cli createwallet mywallet")
         sys.exit(1)
     
     print(f"🔑 Address: {address}")
