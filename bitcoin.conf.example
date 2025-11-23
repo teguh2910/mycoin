@@ -35,8 +35,8 @@ port=9333
 server=1
 
 # RPC username and password (CHANGE THESE!)
-rpcuser=mycoinrpc
-rpcpassword=CHANGE_THIS_TO_A_STRONG_PASSWORD
+rpcuser=teguh
+rpcpassword=teguh
 
 # RPC port (default: 9332 for mainnet, 19332 for testnet, 18443 for regtest)
 rpcport=9332
