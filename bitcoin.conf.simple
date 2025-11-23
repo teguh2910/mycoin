@@ -1,0 +1,32 @@
+# MyCoin - Simple Configuration for Private Network
+# Copy to: ~/.mycoin/bitcoin.conf (Linux) or %APPDATA%\MyCoin\bitcoin.conf (Windows)
+
+# Enable RPC server
+server=1
+
+# RPC credentials (CHANGE THESE!)
+rpcuser=mycoinrpc
+rpcpassword=MySecurePassword123
+
+# RPC settings
+rpcport=9332
+rpcallowip=127.0.0.1
+
+# Network port
+port=9333
+
+# Enable transaction index (required for block explorers)
+txindex=1
+
+# Listen for connections
+listen=1
+
+# Load wallet
+wallet=mywallet
+
+# Performance (adjust based on your RAM)
+dbcache=1024
+
+# Logging (0=file, 1=console)
+printtoconsole=0
+shrinkdebugfile=1

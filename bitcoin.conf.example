@@ -1,0 +1,318 @@
+# MyCoin Configuration File
+# Copy this file to the data directory as bitcoin.conf
+# 
+# Linux: ~/.mycoin/bitcoin.conf
+# Windows: %APPDATA%\MyCoin\bitcoin.conf
+# macOS: ~/Library/Application Support/MyCoin/bitcoin.conf
+
+##############################################################################
+## Network Settings
+##############################################################################
+
+# Run on the mainnet (default)
+# For other networks use: -testnet, -signet, or -regtest
+
+# Listen for connections (default: 1)
+listen=1
+
+# Accept connections from outside (default: 1 if no -proxy or -connect)
+# bind=0.0.0.0
+
+# Connect via a SOCKS5 proxy
+#proxy=127.0.0.1:9050
+
+# Maximum number of inbound+outbound connections (default: 125)
+maxconnections=125
+
+# Port to listen on (default: 9333 for mainnet)
+port=9333
+
+##############################################################################
+## RPC Settings
+##############################################################################
+
+# Enable RPC server (required for mycoin-cli and block explorers)
+server=1
+
+# RPC username and password (CHANGE THESE!)
+rpcuser=mycoinrpc
+rpcpassword=CHANGE_THIS_TO_A_STRONG_PASSWORD
+
+# RPC port (default: 9332 for mainnet, 19332 for testnet, 18443 for regtest)
+rpcport=9332
+
+# Allow RPC connections from specified IP addresses
+rpcallowip=127.0.0.1
+# To allow from local network:
+# rpcallowip=192.168.1.0/24
+
+# Bind RPC to specific address
+# rpcbind=127.0.0.1
+# rpcbind=192.168.1.100
+
+# Use authentication cookie instead of username/password
+# rpccookiefile=/path/to/.cookie
+
+##############################################################################
+## Wallet Settings
+##############################################################################
+
+# Load specific wallet(s) on startup
+wallet=mywallet
+
+# Disable the wallet (if you only want to run a node)
+# disablewallet=1
+
+# Enable transaction replacement (BIP125)
+walletrbf=1
+
+# Avoid reuse of addresses (privacy feature)
+# avoidpartialspends=1
+
+##############################################################################
+## Mining Settings (CPU Mining - For Testing/Private Networks Only)
+##############################################################################
+
+# Enable CPU mining (NOT recommended for production)
+# gen=0
+
+# Number of CPU threads for mining (default: all cores)
+# genproclimit=1
+
+# Mining address (where to send block rewards)
+# -mineraddress requires gen=1
+# mineraddress=YOUR_MYCOIN_ADDRESS_HERE
+
+##############################################################################
+## Transaction Index and Database
+##############################################################################
+
+# Maintain full transaction index (required for block explorers)
+# This allows you to query any transaction by txid
+txindex=1
+
+# Prune blockchain to save disk space (cannot be used with txindex=1)
+# Value in MB, minimum 550
+# prune=5000
+
+# Database cache size in MB (default: 450)
+# Higher values = faster sync but more RAM usage
+dbcache=1024
+
+##############################################################################
+## Performance Settings
+##############################################################################
+
+# Number of script verification threads (default: auto-detect cores)
+# par=4
+
+# Maximum signature cache size in MB (default: 40)
+# maxsigcachesize=64
+
+##############################################################################
+## Network and Connection Settings
+##############################################################################
+
+# Connect only to specific nodes (disables DNS seeding)
+# connect=192.168.1.100:9333
+# connect=mycoin-node.example.com:9333
+
+# Add a node to connect to and attempt to keep the connection open
+# addnode=192.168.1.100:9333
+# addnode=mycoin-node.example.com:9333
+
+# Maintain at most N connections to peers
+# maxconnections=125
+
+# Bind to given address and always listen on it
+# bind=0.0.0.0
+
+# Bind to given address and whitelist peers connecting to it
+# whitebind=192.168.1.100:9333
+
+##############################################################################
+## Privacy Settings
+##############################################################################
+
+# Use Tor SOCKS5 proxy
+# proxy=127.0.0.1:9050
+
+# Only connect through Tor
+# onlynet=onion
+
+# Make outgoing connections only to .onion addresses
+# onion=127.0.0.1:9050
+
+##############################################################################
+## Fee Settings
+##############################################################################
+
+# Transaction fee per kB (default: 0.0001 MYC)
+# paytxfee=0.0001
+
+# Maximum total fee for transactions (safety limit)
+# maxtxfee=1.0
+
+##############################################################################
+## Logging and Debugging
+##############################################################################
+
+# Log to console instead of debug.log
+printtoconsole=0
+
+# Enable debug logging for specific categories
+# Options: net, tor, mempool, http, bench, zmq, walletdb, rpc, estimatefee, addrman, 
+#          selectcoins, reindex, cmpctblock, rand, prune, proxy, mempoolrej, libevent,
+#          coindb, qt, leveldb, validation
+# debug=net
+# debug=rpc
+# debug=mempool
+
+# Log IP addresses in debug output
+# logips=1
+
+# Shrink debug.log on startup (default: 1)
+shrinkdebugfile=1
+
+##############################################################################
+## Block and Memory Pool Settings
+##############################################################################
+
+# Maximum mempool size in MB (default: 300)
+maxmempool=300
+
+# Minimum fee rate for transactions in the mempool (MYC/kB)
+minrelaytxfee=0.00001
+
+# Maximum orphan transactions kept in memory (default: 100)
+maxorphantx=100
+
+##############################################################################
+## ZMQ Notifications (for advanced integrations)
+##############################################################################
+
+# Publish raw block hex to ZMQ socket
+# zmqpubrawblock=tcp://127.0.0.1:28332
+
+# Publish raw transaction hex to ZMQ socket
+# zmqpubrawtx=tcp://127.0.0.1:28333
+
+# Publish hash of block to ZMQ socket
+# zmqpubhashblock=tcp://127.0.0.1:28334
+
+# Publish hash of transaction to ZMQ socket
+# zmqpubhashtx=tcp://127.0.0.1:28335
+
+##############################################################################
+## Advanced Settings
+##############################################################################
+
+# Run in background as daemon (Linux/macOS only)
+# daemon=1
+
+# Specify data directory
+# datadir=/path/to/custom/datadir
+
+# Use testnet
+# testnet=1
+
+# Use regtest (regression test mode)
+# regtest=1
+
+# Use signet
+# signet=1
+
+# Enable replacing transactions in the mempool (BIP125)
+# mempoolreplacement=1
+
+# Relay non-P2SH multisig
+# permitbaremultisig=1
+
+##############################################################################
+## Example Configurations for Different Use Cases
+##############################################################################
+
+# ===== Full Node (Public) =====
+# server=1
+# listen=1
+# txindex=1
+# rpcuser=mycoinrpc
+# rpcpassword=strongpassword
+# rpcallowip=127.0.0.1
+# dbcache=2048
+
+# ===== Mining Node (Private Network) =====
+# server=1
+# gen=1
+# genproclimit=2
+# txindex=1
+# rpcuser=mycoinrpc
+# rpcpassword=strongpassword
+
+# ===== Lightweight Node (Pruned) =====
+# server=1
+# prune=5000
+# rpcuser=mycoinrpc
+# rpcpassword=strongpassword
+# dbcache=512
+
+# ===== Block Explorer Backend =====
+# server=1
+# txindex=1
+# rpcuser=mycoinrpc
+# rpcpassword=strongpassword
+# rpcallowip=127.0.0.1
+# rpcbind=127.0.0.1
+# dbcache=4096
+# maxmempool=500
+
+# ===== Testing/Development (Regtest) =====
+# regtest=1
+# server=1
+# rpcuser=test
+# rpcpassword=test
+# rpcallowip=127.0.0.1
+
+##############################################################################
+## Security Notes
+##############################################################################
+
+# 1. Always use strong rpcpassword (minimum 20 random characters)
+# 2. Only allow RPC from trusted IPs
+# 3. Use firewall rules to protect ports
+# 4. Keep your wallet encrypted
+# 5. Backup your wallet.dat regularly
+# 6. Never share your private keys or seed phrases
+
+##############################################################################
+## Recommended Settings for MyCoin Private Network
+##############################################################################
+
+# Uncomment and customize these for your private network:
+
+# Basic Setup
+# server=1
+# listen=1
+# txindex=1
+# wallet=mywallet
+
+# RPC Configuration
+# rpcuser=mycoinrpc
+# rpcpassword=MySecurePassword2024!
+# rpcallowip=127.0.0.1
+# rpcport=9332
+
+# Network
+# port=9333
+# maxconnections=50
+
+# Performance
+# dbcache=1024
+
+# For local network access (CAUTION: Only use in trusted networks)
+# rpcallowip=192.168.0.0/16
+# rpcbind=0.0.0.0
+
+##############################################################################
+## End of Configuration
+##############################################################################
