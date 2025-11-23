@@ -61,18 +61,30 @@ def mine_single_block(address, worker_id):
             [MYCOIN_CLI, "generatetoaddress", "1", address],
             capture_output=True,
             text=True,
-            timeout=300
+            timeout=600  # Increase timeout to 10 minutes
         )
         
         if result.returncode == 0:
             elapsed = time.time() - start_time
-            block_hash = json.loads(result.stdout)[0] if result.stdout.strip() != "[]" else None
+            # Handle both array and empty response
+            try:
+                if result.stdout.strip() and result.stdout.strip() != "[]":
+                    block_data = json.loads(result.stdout)
+                    block_hash = block_data[0] if isinstance(block_data, list) and len(block_data) > 0 else None
+                else:
+                    block_hash = None
+            except (json.JSONDecodeError, IndexError):
+                block_hash = None
+            
             return {
                 'worker_id': worker_id,
                 'elapsed': elapsed,
                 'hash': block_hash,
                 'success': True
             }
+    except subprocess.TimeoutExpired:
+        print(f"[Worker-{worker_id}] ⏰ Timeout after 10 minutes - block too hard!")
+        return {'worker_id': worker_id, 'success': False}
     except Exception as e:
         print(f"[Worker-{worker_id}] ❌ Error: {e}")
     
@@ -156,28 +168,33 @@ def main():
             
             # Check completed jobs
             done_futures = []
-            for future in as_completed(futures, timeout=1):
-                result = future.result()
-                if result and result.get('success'):
-                    blocks_mined += 1
-                    
-                    # Get updated stats
-                    stats = get_stats()
-                    elapsed_total = time.time() - start_time
-                    
-                    print(f"\n✅ Block #{stats['blocks']} mined!")
-                    print(f"   Worker: {result['worker_id']}")
-                    print(f"   Time: {result['elapsed']:.2f}s")
-                    if result.get('hash'):
-                        print(f"   Hash: {result['hash'][:16]}...")
-                    print(f"   Balance: {stats['balance']:.8f} MYC")
-                    print(f"   Total Mined: {blocks_mined} blocks")
-                    if elapsed_total > 0:
-                        rate = blocks_mined / elapsed_total * 3600
-                        print(f"   Rate: {rate:.2f} blocks/jam")
-                    print("-" * 80)
-                
-                done_futures.append(future)
+            for future in futures[:]:  # Use slice to avoid modification during iteration
+                if future.done():
+                    try:
+                        result = future.result()
+                        if result and result.get('success'):
+                            blocks_mined += 1
+                            
+                            # Get updated stats
+                            stats = get_stats()
+                            elapsed_total = time.time() - start_time
+                            
+                            print(f"\n✅ Block #{stats['blocks']} mined!")
+                            print(f"   Worker: {result['worker_id']}")
+                            print(f"   Time: {result['elapsed']:.2f}s")
+                            if result.get('hash'):
+                                print(f"   Hash: {result['hash'][:16]}...")
+                            print(f"   Balance: {stats['balance']:.8f} MYC")
+                            print(f"   Total Mined: {blocks_mined} blocks")
+                            if elapsed_total > 0:
+                                rate = blocks_mined / elapsed_total * 3600
+                                print(f"   Rate: {rate:.2f} blocks/jam")
+                            print("-" * 80)
+                        
+                        done_futures.append(future)
+                    except Exception as e:
+                        print(f"⚠️  Error processing result: {e}")
+                        done_futures.append(future)
             
             # Remove completed futures
             for future in done_futures:
