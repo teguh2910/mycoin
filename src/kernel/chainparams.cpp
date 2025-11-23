@@ -132,10 +132,10 @@ public:
         m_assumed_blockchain_size = 1;  // MyCoin is new, only genesis block
         m_assumed_chain_state_size = 1;
 
-        // Using Bitcoin's original genesis block (timestamp, nonce, hash all same)
-        genesis = CreateGenesisBlock(1231006505, 2083236893, 0x1d00ffff, 1, 50 * COIN);
+        // Using very easy difficulty for private network CPU mining
+        genesis = CreateGenesisBlock(1231006505, 2, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"000000000019d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f"});
+        assert(consensus.hashGenesisBlock == uint256{"0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206"});
         assert(genesis.hashMerkleRoot == uint256{"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"});
 
         // Note that of those which support the service bits prefix, most only support a subset of
