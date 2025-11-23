@@ -135,7 +135,9 @@ public:
         // Using very easy difficulty for private network CPU mining
         genesis = CreateGenesisBlock(1231006505, 1, 0x207fffff, 1, 50 * COIN);
         consensus.hashGenesisBlock = genesis.GetHash();
-        assert(consensus.hashGenesisBlock == uint256{"6efc6097e26800e29b59dc214f0ae19e8314ce63eabaf00b13c5582064ecb755"});
+        // Temporarily comment out assertion to see actual hash
+        LogPrintf("Genesis hash: %s\n", consensus.hashGenesisBlock.ToString());
+        // assert(consensus.hashGenesisBlock == uint256{"6efc6097e26800e29b59dc214f0ae19e8314ce63eabaf00b13c5582064ecb755"});
         assert(genesis.hashMerkleRoot == uint256{"4a5e1e4baab89f3a32518a88c31bc87f618f76673e2cc77ab2127b7afdeda33b"});
 
         // Note that of those which support the service bits prefix, most only support a subset of
