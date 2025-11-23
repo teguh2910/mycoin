@@ -9,6 +9,22 @@ def dblsha256(data):
     """Double SHA256 hash"""
     return hashlib.sha256(hashlib.sha256(data).digest()).digest()
 
+def check_pow(hash_bytes, bits):
+    """Check if hash meets the proof of work requirement"""
+    # Convert bits to target
+    exponent = bits >> 24
+    mantissa = bits & 0xffffff
+    
+    if exponent <= 3:
+        target = mantissa >> (8 * (3 - exponent))
+    else:
+        target = mantissa << (8 * (exponent - 3))
+    
+    # Convert hash to number (little endian)
+    hash_num = int.from_bytes(hash_bytes, byteorder='little')
+    
+    return hash_num < target
+
 def mine_genesis():
     # Genesis parameters
     timestamp = 1231006505  # Bitcoin's original timestamp
@@ -28,7 +44,7 @@ def mine_genesis():
     start_time = time.time()
     nonce = 0
     
-    while True:
+    while nonce < 1000000:
         # Build block header
         header = struct.pack("<I", version)      # version
         header += prev_hash                       # prev block hash
@@ -41,8 +57,8 @@ def mine_genesis():
         hash_result = dblsha256(header)
         hash_hex = hash_result[::-1].hex()  # Reverse for display
         
-        # Check if it meets difficulty (for 0x207fffff, just need to start with zeros)
-        if hash_result[-1] == 0:  # Very easy check for regtest difficulty
+        # Check if it meets difficulty
+        if check_pow(hash_result, bits):
             elapsed = time.time() - start_time
             print(f"✓ Found valid genesis block!")
             print(f"  Hash: {hash_hex}")
@@ -57,6 +73,8 @@ def mine_genesis():
         nonce += 1
         if nonce % 100000 == 0:
             print(f"  Tried {nonce:,} nonces... (hash: {hash_hex})")
+    
+    print("No valid nonce found in first 1,000,000 tries")
 
 if __name__ == "__main__":
     mine_genesis()
